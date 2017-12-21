@@ -1,0 +1,56 @@
+package fr.insarouen.asi.prog.asiaventure;
+
+import java.util.*;
+import java.lang.*;
+import java.io.*;
+import java.util.Scanner;
+import fr.insarouen.asi.prog.asiaventure.*;
+
+public class Main {
+
+  public static void main(String[] args) throws Throwable{
+
+    Scanner sc = new Scanner(System.in);;
+    int choix;
+    String nomFichier;
+    Simulateur simulateur = null;
+
+    System.out.println("--- Menu ---");
+    System.out.println("1/ jouer");
+		System.out.println("2/ charger un fichier de description");
+		System.out.println("3/ sauver la partie actuelle");
+		System.out.println("4/ charger une partie");
+		System.out.println("5/ quitter");
+
+    choix = sc.nextInt();
+    sc.nextLine();
+
+    switch (choix){
+      case 1:
+
+      break;
+      case 2:
+        Reader fichier;
+        fichier = new FileReader("config.txt");
+        Simulateur sim = new Simulateur(fichier);
+        System.out.println(sim.toString());
+        fichier.close();
+      break;
+      case 3:
+					System.out.println("Nom du fichier de sauvegarde : ");
+					nomFichier = sc.nextLine();
+					ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(nomFichier));
+					simulateur.enregistrer(oos);
+      break;
+      case 4:
+					System.out.println("Nom du fichier à lire : ");
+					nomFichier = sc.nextLine();
+					ObjectInputStream ois = new ObjectInputStream(new FileInputStream(nomFichier));
+					simulateur = new Simulateur(ois);
+      break;
+      case 5:
+					quitter = true;
+      break;
+    }
+  }
+}

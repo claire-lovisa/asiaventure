@@ -1,0 +1,63 @@
+package fr.insarouen.asi.prog.asiaventure.elements.vivants;
+
+import static org.junit.Assert.*;
+import static org.hamcrest.core.Is.is;
+import static org.hamcrest.core.AllOf.allOf;
+import static org.hamcrest.core.AnyOf.anyOf;
+import org.hamcrest.core.IsEqual;
+import org.junit.Test;
+import org.junit.Ignore;
+import fr.insarouen.asi.prog.asiaventure.elements.structure.Piece;
+import fr.insarouen.asi.prog.asiaventure.elements.structure.Porte;
+import fr.insarouen.asi.prog.asiaventure.elements.objets.Objet;
+import fr.insarouen.asi.prog.asiaventure.Monde;
+import fr.insarouen.asi.prog.asiaventure.elements.GestionObjets;
+import fr.insarouen.asi.prog.asiaventure.elements.vivants.Vivant;
+import fr.insarouen.asi.prog.asiaventure.elements.Entite;
+import fr.insarouen.asi.prog.asiaventure.elements.Activable;
+import org.junit.Before;
+import fr.insarouen.asi.prog.asiaventure.NomDEntiteDejaUtiliseDansLeMondeException;
+import fr.insarouen.asi.prog.asiaventure.elements.structure.ObjetAbsentDeLaPieceException;
+import fr.insarouen.asi.prog.asiaventure.elements.structure.PorteFermeException;
+import fr.insarouen.asi.prog.asiaventure.elements.structure.PorteInexistanteDansLaPieceException;
+import fr.insarouen.asi.prog.asiaventure.elements.objets.ObjetNonDeplacableException;
+import fr.insarouen.asi.prog.asiaventure.elements.vivants.ObjetNonPossedeParLeVivantException;
+import java.util.*;
+import org.hamcrest.core.IsSame;
+
+public class JoueurHumainTest {
+
+  Monde m;
+  Objet o;
+  JoueurHumain joueurHumain;
+  Map<String,Objet> objets;
+  Piece pieceA,pieceB;
+  Objet[] objs;
+  Porte porte;
+
+  @Before
+  public void avantTest() throws NomDEntiteDejaUtiliseDansLeMondeException{
+    objs = new Objet[0];
+    m = new Monde("Maison des monstres");
+    pieceA = new Piece("Salle de Zombification",m);
+    pieceB = new Piece("Salle de De-Zombification",m);
+    joueurHumain = new JoueurHumain("Mario",m,10,10,pieceA,objs);
+    porte = new Porte("Porte réanimée",m,pieceA,pieceB);
+    pieceA.addPorte(porte);
+    o = new Objet("Patate",m){
+      public boolean estDeplacable() {
+        return true;
+      }
+    };
+    pieceA.deposer(o);
+  }
+
+  @Test
+  public void testExecuter() throws Throwable {
+    joueurHumain.setOrdre("prendre Patate");
+    joueurHumain.executer();
+    assertThat(pieceA.contientObjet(o), is(false));
+    assertThat(joueurHumain.possede(o),is(true));
+  }
+
+}

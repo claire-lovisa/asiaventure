@@ -1,0 +1,76 @@
+package fr.insarouen.asi.prog.asiaventure.elements.structure;
+
+import fr.insarouen.asi.prog.asiaventure.NomDEntiteDejaUtiliseDansLeMondeException;
+import fr.insarouen.asi.prog.asiaventure.Monde;
+import fr.insarouen.asi.prog.asiaventure.elements.objets.Objet;
+import fr.insarouen.asi.prog.asiaventure.elements.Activable;
+import fr.insarouen.asi.prog.asiaventure.elements.ActivationImpossibleException;
+import fr.insarouen.asi.prog.asiaventure.elements.ActivationImpossibleAvecObjetException;
+import fr.insarouen.asi.prog.asiaventure.elements.objets.serrurerie.Serrure;
+import fr.insarouen.asi.prog.asiaventure.elements.Etat;
+
+public class Porte extends ElementStructurel implements Activable{
+
+  private Piece pieceA;
+  private Piece pieceB;
+  private Serrure serrure;
+  private Etat etat;
+
+  public Porte(String nom,Monde monde, Piece pieceA, Piece pieceB)
+  throws NomDEntiteDejaUtiliseDansLeMondeException{
+    super(nom,monde);
+    this.pieceA = pieceA;
+    this.pieceB = pieceB;
+    pieceA.addPorte(this);
+		pieceB.addPorte(this);
+    this.etat = Etat.OUVERT;
+    this.serrure= new Serrure (monde);
+  }
+
+  public Porte(String nom,Monde monde,Serrure serrure, Piece pieceA, Piece pieceB)
+  throws NomDEntiteDejaUtiliseDansLeMondeException{
+    this(nom,monde,pieceA,pieceB);
+    this.serrure = serrure;
+  }
+
+  public boolean activableAvec(Objet obj) {
+    return true;
+  }
+
+  public void activer() throws ActivationImpossibleException{
+
+  }
+
+  public void activerAvec(Objet obj)throws ActivationImpossibleAvecObjetException,
+  ActivationImpossibleException {
+
+  }
+
+  public Piece getPieceAutreCote(Piece piece){
+    if (piece.equals(pieceA)){
+      return pieceB;
+    }
+    else if (piece.equals(pieceB)){
+      return pieceA;
+    }
+    else {
+      return null;
+    }
+  }
+
+  public Etat getEtat(){
+    return this.etat;
+  }
+  
+  public Serrure getSerrure() {
+  	return this.serrure;
+  }
+
+  public String toString(){
+    StringBuilder s = new StringBuilder("");
+    s.append(super.getNom());
+    s.append(" ");
+    s.append(" entre "+pieceA+" et "+pieceB);
+    return s.toString();
+  }
+}

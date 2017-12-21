@@ -1,0 +1,174 @@
+package fr.insarouen.asi.prog.asiaventure.elements.objets.serrurerie;
+
+import fr.insarouen.asi.prog.asiaventure.Monde;
+import fr.insarouen.asi.prog.asiaventure.elements.objets.Objet;
+import fr.insarouen.asi.prog.asiaventure.elements.objets.PiedDeBiche;
+import fr.insarouen.asi.prog.asiaventure.NomDEntiteDejaUtiliseDansLeMondeException;
+import fr.insarouen.asi.prog.asiaventure.elements.structure.Porte;
+import fr.insarouen.asi.prog.asiaventure.elements.Etat;
+import fr.insarouen.asi.prog.asiaventure.elements.Activable;
+import fr.insarouen.asi.prog.asiaventure.elements.ActivationImpossibleAvecObjetException;
+import fr.insarouen.asi.prog.asiaventure.elements.ActivationImpossibleException;
+import java.util.*;
+
+/**
+ * Serrure est la classe permettant de représenter une serrure.
+ * A chaque serrure est associé un état et une unique clef.
+ *
+ * @author Sandratra
+ * @author Claire
+ *
+ *@see Objet
+ *@see Activable
+*/
+public class Serrure extends Objet implements Activable {
+
+  /**
+   * L'état de la serrure
+   *
+   * @see Etat
+  */
+  private Etat etat;
+
+  /**
+   * L'unique clef associée à la serrure
+   *
+   * @see Clef
+  */
+  private Clef clef;
+
+  /**
+   * Le compteur permettant de générer des clefs et des serrures uniques
+  */
+  private static int compteur=0;
+
+  /**
+   * Constructeur Serrure.
+   * Permet de créer une serrure. Elle est initialement vérouillée et sans clef associée.
+   *
+   * @param nom Le nom de la serrure
+   * @param monde Le monde dans lequel est la serrure
+   *
+   * @see Monde
+  */
+  public Serrure(String nom, Monde monde) throws NomDEntiteDejaUtiliseDansLeMondeException {
+    super(nom,monde);
+    clef=null;
+    this.etat=etat.DEVERROUILLE;
+  }
+
+  /**
+   * Constructeur Serrure.
+   * Permet de créer une serrure. Elle est initialement vérouillée et sans clef associée.
+   * Son nom est généré automatiquement.
+   *
+   * @param monde Le monde dans lequel est la serrure
+   *
+   * @see Monde
+  */
+  public Serrure(Monde monde) throws NomDEntiteDejaUtiliseDansLeMondeException {
+    this(genererNomSerrure(),monde);
+  }
+
+  /**
+   * Permet de créer une clef unique
+   *
+   * @return la clef créée
+  */
+  public Clef creerClef() throws NomDEntiteDejaUtiliseDansLeMondeException{
+    if (clef == null) {
+      do {
+        try {
+          this.clef = new Clef("Clef"+compteur,monde);
+        } catch (NomDEntiteDejaUtiliseDansLeMondeException e){
+          compteur++;
+      }
+      } while (clef==null);
+      return clef;
+    }
+    else return null;
+  }
+
+  /**
+   * Génère un nom de clef unique
+   *
+   * @return le nom de la clef
+  */
+  private static String genererNomSerrure() {
+    compteur++;
+		return "Serrure"+compteur;
+  }
+
+  /**
+   * Active la serrure si l'objet est valide
+   *
+   * @param obj L'objet servant à activer la serrure
+  */
+  public void activerAvec(Objet obj) throws ActivationImpossibleAvecObjetException {
+    if(this.activableAvec(obj)) {
+      if (obj instanceof PiedDeBiche){
+        this.etat=etat.CASSE;
+      }
+      else if (this.etat==etat.DEVERROUILLE) {
+        this.etat=etat.VERROUILLE;
+      }
+      else {
+        this.etat=etat.DEVERROUILLE;
+      }
+    }
+    else {
+      throw new ActivationImpossibleAvecObjetException("Serrure non activable avec cet objet.");
+    }
+  }
+
+  /**
+   * Dit si la serrure est activable ou non avec cet objet
+   *
+   * @param obj L'objet servant à activer la serrure
+   *
+   * @return Oui si la serrure est activable avec cet objet, non sinon
+  */
+  public boolean activableAvec(Objet obj) {
+    if (obj.equals(this.clef) || (obj instanceof PiedDeBiche)) {
+      return true;
+    }
+    else return false;
+  }
+
+  /**
+   * Active la serrure sans objet
+  */
+  public void activer() throws ActivationImpossibleException {
+    throw new ActivationImpossibleException("Serrure non activable sans objet, faut pas jouer au plus malin avec moi.");
+  }
+
+  /**
+   * Permet de définir si la serrure est déplacable ou non
+   *
+   * @return Non car la serrure n'est pas déplacable
+  */
+  public boolean estDeplacable() {
+    return false;
+  }
+
+  /**
+   * Permet de connaitre l'état de la serrure
+   *
+   * @return L'état de la serrure
+  */
+  public Etat getEtat() {
+    return etat;
+  }
+
+  /**
+   * Donne une représentation de la serrure en chaine de caractere.
+   *
+   * @return La chaine de caractere representant la serrure.
+  */
+  public String ToString() {
+    StringBuilder s = new StringBuilder("");
+    s.append(super.getNom());
+    return s.toString();
+  }
+
+}

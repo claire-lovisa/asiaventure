@@ -1,0 +1,9 @@
+Monde OrangeGeante
+Piece Cuisine
+Piece Epluchatoire
+PorteSerrure PorteA Cuisine Epluchatoire
+Porte PorteB Epluchatoire Cuisine
+Clef PorteA Epluchatoire
+JoueurHumain Damdam 10 10 Epluchatoire
+PiedDeBiche Bichette Epluchatoire 
+ConditionDeFinVivantDansPiece SUCCES Damdam Epluchatoire
